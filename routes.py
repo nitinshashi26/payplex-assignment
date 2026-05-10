@@ -1,12 +1,8 @@
-from fastapi import APIRouter, UploadFile, File
-from .aipipeline import process_document
+from fastapi import APIRouter, Query
+from .recommender import recommend_for_user
 
-router = APIRouter(tags=["IDP"])
+router = APIRouter(tags=["Recommendations"])
 
-@router.post("/process")
-async def process_doc(file: UploadFile = File(...)):
-    contents = await file.read()
-    with open("temp_upload.pdf", "wb") as f:
-        f.write(contents)
-    result = process_document("temp_upload.pdf")
-    return {"filename": file.filename, **result}
+@router.get("/")
+def recommend(user_id: int = Query(...)):
+    return {"user_id": user_id, "recommendations": recommend_for_user(user_id)}

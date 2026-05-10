@@ -1,23 +1,11 @@
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from idpservice.routes import router as idp_router
-from chatbotservice.routes import router as chatbot_router
-from ecommerceservice.routes import router as ecommerce_router
+from products.routes import router as product_router
+from recommendations.routes import router as rec_router
 
-app = FastAPI(title="Enterprise AI Platform", version="1.0")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-app.include_router(idp_router, prefix="/api/idp")
-app.include_router(chatbot_router, prefix="/api/chatbot")
-app.include_router(ecommerce_router, prefix="/api/ecommerce")
+app = FastAPI(title="PayPlex AI E-commerce API", version="1.0")
+app.include_router(product_router, prefix="/api/products")
+app.include_router(rec_router, prefix="/api/recommend")
 
 @app.get("/")
-def healthcheck():
-    return {"status": "running", "message": "Enterprise AI Platform API is live"}
+def alive():
+    return {"status": "ok", "service": "AI E-commerce"}
